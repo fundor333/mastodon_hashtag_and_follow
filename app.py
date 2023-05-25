@@ -19,24 +19,26 @@ class MastodonSocial:
         headers = {"Authorization": f"Bearer {self.token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            return list(set([user["account"]["id"] for user in response.json()]))
+            return list({user["account"]["id"] for user in response.json()})
         else:
             raise Exception("Error")
 
-    def run(self, hashtag: str) -> None:
+    def run_from_(self, hashtag: str) -> None:
         users = self.get_users_from_hashtags(hashtag)
         for user in users:
             self.follow(user)
 
 
 @click.command()
-@click.option('--token', help='Token for Mastodon')
-@click.option('--domain', default="mastodon.social", help='Mastodon server')
-@click.option('--hashtag', default=1, help='The hash tag to find the followers')
+@click.option("--token", help="Token for Mastodon")
+@click.option("--domain", default="mastodon.social", help="Mastodon server")
+@click.option(
+    "--hashtag", default=1, help="The hash tag to find the followers"
+)
 def run(token, domain, hashtag):
     ms = MastodonSocial(token=token, domain=domain)
     ms.run(hashtag=hashtag)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
