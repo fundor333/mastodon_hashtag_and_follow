@@ -19,7 +19,7 @@ class MastodonSocial:
         headers = {"Authorization": f"Bearer {self.token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            return [user["account"]["id"] for user in response.json()]
+            return list(set([user["account"]["id"] for user in response.json()]))
         else:
             raise Exception("Error")
 
