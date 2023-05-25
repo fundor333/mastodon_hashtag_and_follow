@@ -1,5 +1,5 @@
-import requests
 import click
+import requests
 
 
 class MastodonSocial:
