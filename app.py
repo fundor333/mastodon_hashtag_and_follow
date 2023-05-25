@@ -23,7 +23,7 @@ class MastodonSocial:
         else:
             raise Exception("Error")
 
-    def run_from_(self, hashtag: str) -> None:
+    def run_hashtag(self, hashtag: str) -> None:
         users = self.get_users_from_hashtags(hashtag)
         for user in users:
             self.follow(user)
@@ -37,7 +37,7 @@ class MastodonSocial:
 )
 def run(token, domain, hashtag):
     ms = MastodonSocial(token=token, domain=domain)
-    ms.run(hashtag=hashtag)
+    ms.run_hashtag(hashtag=hashtag)
 
 
 if __name__ == "__main__":
