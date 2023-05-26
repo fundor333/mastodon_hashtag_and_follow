@@ -21,3 +21,19 @@ report_only = true                         # Report only, always exit with zero.
 cache_dir = '.skylt_cache'                 # Cache location (default: `~/.skjold/cache`).
 cache_expires = 86400                      # Cache max. age.
 verbose = true                             # Be verbose.
+
+[tool.poetry]
+name = "mastodon-follower-cli"
+version = "1.0.0"
+description = "My personal mastodon cli for follow user"
+authors = ["Fundor333 <fundor333@fundor333.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+typer = "^0.9.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
