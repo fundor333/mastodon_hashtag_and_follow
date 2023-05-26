@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 requests = "*"
-click = "*"
+typer = {extras = ["all"], version = "*"}
 
 [dev-packages]
 pylint = "*"

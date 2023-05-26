@@ -1,5 +1,11 @@
-import click
+from typing import Annotated
+import typer
 import requests
+from rich.console import Console
+from rich.table import Table
+
+
+app = typer.Typer()
 
 
 class MastodonSocial:
@@ -23,22 +29,51 @@ class MastodonSocial:
         else:
             raise Exception("Error")
 
-    def run_hashtag(self, hashtag: str) -> None:
+    def get_list(self) -> list[dict]:
+        url = f"https://{self.domain}/api/v1/lists"
+        headers = {"Authorization": f"Bearer {self.token}"}
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception("Error")
+
+    def run_hashtag_follow(self, hashtag: str) -> None:
         users = self.get_users_from_hashtags(hashtag)
         for user in users:
             self.follow(user)
 
 
-@click.command()
-@click.option("--token", help="Token for Mastodon")
-@click.option("--domain", default="mastodon.social", help="Mastodon server")
-@click.option(
-    "--hashtag", default=1, help="The hash tag to find the followers"
-)
-def run(token, domain, hashtag):
+@app.command()
+def get_lists(
+    token: Annotated[str, typer.Argument(help="Token for Mastodon")],
+    domain: Annotated[
+        str, typer.Argument(help="Mastodon Server")
+    ] = "mastodon.social",
+):
     ms = MastodonSocial(token=token, domain=domain)
-    ms.run_hashtag(hashtag=hashtag)
+    console = Console()
+    table = Table()
+    table.add_column("Id")
+    table.add_column("Title")
+    for e in ms.get_list():
+        table.add_row(e["id"], e["title"])
+    console.print(table)
+
+
+@app.command()
+def follow_from_hashtag(
+    token: Annotated[str, typer.Argument(help="Token for Mastodon")],
+    hashtag: Annotated[
+        str, typer.Argument(help="The hash tag to find the followers")
+    ],
+    domain: Annotated[
+        str, typer.Argument(help="Mastodon Server")
+    ] = "mastodon.social",
+):
+    ms = MastodonSocial(token=token, domain=domain)
+    ms.run_hashtag_follow(hashtag=hashtag)
 
 
 if __name__ == "__main__":
-    run()
+    app()
