@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 requests = "*"
 typer = {extras = ["all"], version = "*"}
+"mastodon.py" = "*"
 
 [dev-packages]
 pylint = "*"
