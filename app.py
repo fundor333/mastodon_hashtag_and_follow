@@ -19,8 +19,6 @@ class MastodonSocial:
         headers = {"Authorization": f"Bearer {self.token}"}
         response = requests.post(url, headers=headers)
         if response.status_code == 200:
-            print(f"Success: {account_id}")
-            print(response.json())
             logger.info("Success")
 
     def get_users_from_hashtags(self, hashtag: str) -> None:
@@ -49,8 +47,13 @@ class MastodonSocial:
     def add_user_to_list(self, list_id: str, list_users_id: list[str]) -> None:
         url = f"https://{self.domain}/api/v1/lists/{list_id}/accounts"
         headers = {"Authorization": f"Bearer {self.token}"}
+        response = requests.get(url, headers=headers)
+        present = {user["id"] for user in response.json()}
+        list_users_id = list(set(list_users_id) - present)
+        url = f"https://{self.domain}/api/v1/lists/{list_id}/accounts"
+        headers = {"Authorization": f"Bearer {self.token}"}
         response = requests.post(
-            url, headers=headers, data={"account_ids": list_users_id}
+            url, headers=headers, json={"account_ids": list_users_id}
         )
         if response.status_code == 200:
             logger.info("Success")
