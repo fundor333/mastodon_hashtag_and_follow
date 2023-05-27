@@ -98,6 +98,8 @@ def add_list_from_hashtag(
 ):
     ms = MastodonSocial(token=token, domain=domain)
     users = ms.get_users_from_hashtags(hashtag)
+    for e in users:
+        ms.follow(e)
     ms.add_user_to_list(list_id, users)
 
 
